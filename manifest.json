@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Slick",
+  "version": "1.0",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://api.anthropic.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  }
+}
