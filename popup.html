@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { width: 320px; font-family: -apple-system, system-ui, sans-serif; background: #1a1a1a; color: #e0e0e0; margin: 0; }
+    
+    /* Header */
+    .header { padding: 15px; background: #252525; border-bottom: 1px solid #333; display: flex; align-items: center; justify-content: space-between; }
+    .header h2 { margin: 0; font-size: 16px; font-weight: 600; color: white; letter-spacing: 0.5px; }
+    .badge { background: #3b82f6; font-size: 10px; padding: 2px 6px; border-radius: 4px; color: white; }
+
+    /* Tabs */
+    .tabs { display: flex; background: #222; border-bottom: 1px solid #333; }
+    .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; font-size: 13px; color: #888; transition: 0.2s; }
+    .tab.active { color: #3b82f6; border-bottom: 2px solid #3b82f6; font-weight: 500; }
+    .tab:hover { background: #2a2a2a; }
+
+    /* Content Area */
+    .content { padding: 15px; display: none; }
+    .content.active { display: block; }
+
+    /* Form Elements */
+    label { display: block; margin-top: 12px; font-size: 12px; color: #aaa; margin-bottom: 4px; }
+    input, textarea, select { 
+        width: 100%; box-sizing: border-box; background: #111; border: 1px solid #333; 
+        color: white; padding: 8px; border-radius: 6px; font-size: 13px; outline: none;
+    }
+    input:focus, textarea:focus, select:focus { border-color: #3b82f6; }
+    textarea { height: 70px; resize: vertical; }
+
+    /* Key Binder */
+    .key-binder { display: flex; gap: 8px; }
+    
+    /* Save Button */
+    button.save-btn {
+        width: 100%; margin-top: 20px; padding: 10px; background: #3b82f6; 
+        color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;
+    }
+    button.save-btn:hover { background: #2563eb; }
+
+    /* Instructions */
+    .step { display: flex; gap: 10px; margin-bottom: 15px; font-size: 13px; color: #ccc; }
+    .step-num { min-width: 20px; height: 20px; background: #333; border-radius: 50%; text-align: center; line-height: 20px; font-size: 11px; font-weight: bold; }
+    
+    /* Toggle */
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+    .toggle-desc { font-size: 12px; color: #888; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h2>Welcome to Slick</h2>
+    <span class="badge">v2.0</span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-target="settings">Settings</div>
+    <div class="tab" data-target="help">How to Use</div>
+  </div>
+
+  <div id="settings" class="content active">
+    
+    <label>Claude API Key</label>
+    <input type="password" id="apiKey" placeholder="sk-ant-...">
+
+    <label>Trigger Key Combination</label>
+    <div class="key-binder">
+        <select id="modifierKey" style="width: 40%">
+            <option value="Shift">Shift</option>
+            <option value="Alt">Alt</option>
+            <option value="Control">Ctrl</option>
+        </select>
+        <select id="triggerLetter" style="width: 60%">
+            </select>
+    </div>
+
+    <label>System Prompt (AI Persona)</label>
+    <textarea id="sysPrompt" placeholder="E.g. Explain this concisely..."></textarea>
+
+    <div class="toggle-row">
+        <div>
+            <label style="margin:0">Persistent Memory</label>
+            <div class="toggle-desc">Remember previous chats in this session?</div>
+        </div>
+        <input type="checkbox" id="memoryMode" style="width: auto;">
+    </div>
+
+    <button id="save" class="save-btn">Save Preferences</button>
+    <div id="status" style="text-align:center; margin-top:10px; font-size:12px; color:#4ade80; height:15px;"></div>
+  </div>
+
+  <div id="help" class="content">
+    <div class="step">
+        <div class="step-num">1</div>
+        <div>Enter your <strong>Claude API Key</strong> in the Settings tab.</div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div>Select text on any webpage.</div>
+    </div>
+    <div class="step">
+        <div class="step-num">3</div>
+        <div>Press your chosen trigger (Default: <strong>Shift + E</strong>).</div>
+    </div>
+    <div class="step">
+        <div class="step-num">4</div>
+        <div>A stealthy glass popup will appear with the answer.</div>
+    </div>
+    <hr style="border-color:#333; border-style:dashed;">
+    <p style="font-size:12px; color:#888;">
+        <strong>Pro Tip:</strong> Enable "Persistent Memory" if you want to ask follow-up questions by selecting new text.
+    </p>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
