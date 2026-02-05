@@ -1,118 +1,368 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <style>
-    body { width: 320px; font-family: -apple-system, system-ui, sans-serif; background: #1a1a1a; color: #e0e0e0; margin: 0; }
-    
-    /* Header */
-    .header { padding: 15px; background: #252525; border-bottom: 1px solid #333; display: flex; align-items: center; justify-content: space-between; }
-    .header h2 { margin: 0; font-size: 16px; font-weight: 600; color: white; letter-spacing: 0.5px; }
-    .badge { background: #3b82f6; font-size: 10px; padding: 2px 6px; border-radius: 4px; color: white; }
+    <meta charset="UTF-8">
+    <title>Slick Settings</title>
+    <style>
+        :root {
+            /* Theme Variables */
+            --glass-surface: rgba(20, 20, 25, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --color-primary: #3b82f6;
+            --color-primary-hover: #2563eb;
+            --text-main: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(0, 0, 0, 0.3);
+            --input-border: rgba(255, 255, 255, 0.08);
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
-    /* Tabs */
-    .tabs { display: flex; background: #222; border-bottom: 1px solid #333; }
-    .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; font-size: 13px; color: #888; transition: 0.2s; }
-    .tab.active { color: #3b82f6; border-bottom: 2px solid #3b82f6; font-weight: 500; }
-    .tab:hover { background: #2a2a2a; }
+        body {
+            margin: 0;
+            width: 360px;
+            height: 540px;
+            font-family: var(--font-main);
+            background-color: #0f0f11;
+            /* The "Aurora" Background Gradient */
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            color: var(--text-main);
+            overflow: hidden; /* Prevent scrollbars */
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* Content Area */
-    .content { padding: 15px; display: none; }
-    .content.active { display: block; }
+        /* --- HEADER --- */
+        .header {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    /* Form Elements */
-    label { display: block; margin-top: 12px; font-size: 12px; color: #aaa; margin-bottom: 4px; }
-    input, textarea, select { 
-        width: 100%; box-sizing: border-box; background: #111; border: 1px solid #333; 
-        color: white; padding: 8px; border-radius: 6px; font-size: 13px; outline: none;
-    }
-    input:focus, textarea:focus, select:focus { border-color: #3b82f6; }
-    textarea { height: 70px; resize: vertical; }
+        .brand {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.5px;
+        }
 
-    /* Key Binder */
-    .key-binder { display: flex; gap: 8px; }
-    
-    /* Save Button */
-    button.save-btn {
-        width: 100%; margin-top: 20px; padding: 10px; background: #3b82f6; 
-        color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;
-    }
-    button.save-btn:hover { background: #2563eb; }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981; /* Green */
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
 
-    /* Instructions */
-    .step { display: flex; gap: 10px; margin-bottom: 15px; font-size: 13px; color: #ccc; }
-    .step-num { min-width: 20px; height: 20px; background: #333; border-radius: 50%; text-align: center; line-height: 20px; font-size: 11px; font-weight: bold; }
-    
-    /* Toggle */
-    .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
-    .toggle-desc { font-size: 12px; color: #888; }
-  </style>
+        .version-badge {
+            font-size: 11px;
+            background: rgba(255,255,255,0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* --- TABS --- */
+        .tabs {
+            display: flex;
+            padding: 0 24px;
+            margin-bottom: 20px;
+            gap: 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .tab {
+            padding-bottom: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .tab.active {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--color-primary);
+            box-shadow: 0 -2px 10px var(--color-primary);
+        }
+
+        /* --- CONTENT CARD --- */
+        .content-container {
+            flex: 1;
+            padding: 0 24px;
+            overflow-y: auto; /* Allow scrolling if content gets too tall */
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- INPUTS --- */
+        .form-group { margin-bottom: 16px; }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .glass-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .glass-input:focus {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea.glass-input {
+            resize: none;
+            height: 80px;
+            line-height: 1.5;
+        }
+
+        /* --- TRIGGER KEY ROW --- */
+        .row { display: flex; gap: 10px; }
+        select.glass-input { cursor: pointer; appearance: none; }
+
+        /* --- TOGGLE SWITCH --- */
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            margin-top: 10px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .toggle-text h4 { margin: 0; font-size: 14px; font-weight: 500; }
+        .toggle-text p { margin: 2px 0 0; font-size: 11px; color: var(--text-secondary); }
+
+        /* Custom Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255,255,255,0.1);
+            transition: .4s;
+            border-radius: 22px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--color-primary); }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+        /* --- FOOTER & BUTTON --- */
+        .footer {
+            padding: 20px 24px;
+            background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--color-primary);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active { transform: translateY(0); }
+
+        /* --- HELP LIST --- */
+        .help-list { list-style: none; padding: 0; margin: 0; }
+        .help-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .step-num {
+            min-width: 20px;
+            height: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+        }
+        strong { color: white; }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        
+        #status-msg {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 10px;
+            height: 15px;
+            color: #10b981;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #status-msg.show { opacity: 1; }
+
+    </style>
 </head>
 <body>
 
-  <div class="header">
-    <h2>Welcome to Slick</h2>
-    <span class="badge">v2.0</span>
-  </div>
-
-  <div class="tabs">
-    <div class="tab active" data-target="settings">Settings</div>
-    <div class="tab" data-target="help">How to Use</div>
-  </div>
-
-  <div id="settings" class="content active">
-    
-    <label>Claude API Key</label>
-    <input type="password" id="apiKey" placeholder="sk-ant-...">
-
-    <label>Trigger Key Combination</label>
-    <div class="key-binder">
-        <select id="modifierKey" style="width: 40%">
-            <option value="Shift">Shift</option>
-            <option value="Alt">Alt</option>
-            <option value="Control">Ctrl</option>
-        </select>
-        <select id="triggerLetter" style="width: 60%">
-            </select>
-    </div>
-
-    <label>System Prompt (AI Persona)</label>
-    <textarea id="sysPrompt" placeholder="E.g. Explain this concisely..."></textarea>
-
-    <div class="toggle-row">
-        <div>
-            <label style="margin:0">Persistent Memory</label>
-            <div class="toggle-desc">Remember previous chats in this session?</div>
+    <div class="header">
+        <div class="brand">
+            <div class="status-dot"></div>
+            Slick
         </div>
-        <input type="checkbox" id="memoryMode" style="width: auto;">
+        <div class="version-badge">v2.0</div>
     </div>
 
-    <button id="save" class="save-btn">Save Preferences</button>
-    <div id="status" style="text-align:center; margin-top:10px; font-size:12px; color:#4ade80; height:15px;"></div>
-  </div>
+    <div class="tabs">
+        <div class="tab active" data-target="settings">Settings</div>
+        <div class="tab" data-target="help">How to use</div>
+    </div>
 
-  <div id="help" class="content">
-    <div class="step">
-        <div class="step-num">1</div>
-        <div>Enter your <strong>Claude API Key</strong> in the Settings tab.</div>
-    </div>
-    <div class="step">
-        <div class="step-num">2</div>
-        <div>Select text on any webpage.</div>
-    </div>
-    <div class="step">
-        <div class="step-num">3</div>
-        <div>Press your chosen trigger (Default: <strong>Shift + E</strong>).</div>
-    </div>
-    <div class="step">
-        <div class="step-num">4</div>
-        <div>A stealthy glass popup will appear with the answer.</div>
-    </div>
-    <hr style="border-color:#333; border-style:dashed;">
-    <p style="font-size:12px; color:#888;">
-        <strong>Pro Tip:</strong> Enable "Persistent Memory" if you want to ask follow-up questions by selecting new text.
-    </p>
-  </div>
+    <div class="content-container">
+        
+        <div id="settings" class="section active">
+            
+            <div class="form-group">
+                <label>Claude API Key</label>
+                <input type="password" id="apiKey" class="glass-input" placeholder="sk-ant-...">
+            </div>
 
-  <script src="popup.js"></script>
+            <div class="form-group">
+                <label>Trigger Combo</label>
+                <div class="row">
+                    <select id="modifierKey" class="glass-input">
+                        <option value="Shift">Shift</option>
+                        <option value="Alt">Alt</option>
+                        <option value="Control">Ctrl</option>
+                    </select>
+                    <select id="triggerLetter" class="glass-input">
+                        </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>System Persona</label>
+                <textarea id="sysPrompt" class="glass-input" placeholder="You are a helpful assistant. Explain this concisely."></textarea>
+            </div>
+
+            <div class="toggle-row">
+                <div class="toggle-text">
+                    <h4>Memory Mode</h4>
+                    <p>Remember chat context</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="memoryMode">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div id="help" class="section">
+            <ul class="help-list">
+                <li class="help-item">
+                    <div class="step-num">1</div>
+                    <div>Enter your <strong>API Key</strong> in the settings tab.</div>
+                </li>
+                <li class="help-item">
+                    <div class="step-num">2</div>
+                    <div>Select any text on a webpage.</div>
+                </li>
+                <li class="help-item">
+                    <div class="step-num">3</div>
+                    <div>Press <strong>Shift + E</strong> (or your custom key).</div>
+                </li>
+                <li class="help-item">
+                    <div class="step-num">4</div>
+                    <div>A glass tooltip will appear with the answer.</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <button id="save" class="btn-primary">
+            Save Changes
+        </button>
+        <div id="status-msg">Saved Successfully</div>
+    </div>
+
+    <script src="popup.js"></script>
 </body>
 </html>
